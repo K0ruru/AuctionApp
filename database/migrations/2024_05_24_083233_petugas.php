@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->id('id_petugas');
             $table->string('nama_petugas');
             $table->string('username')->unique();
-            $table->string('pasword');
+            $table->string('password');
             $table->unsignedBigInteger('id_level');
         });
     }

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\PetugasController;
 
 // route group for petugas
 Route::prefix('/officer')->group(function () {
@@ -30,6 +31,9 @@ Route::prefix('/admin')->group(function () {
     Route::get('/admin-product', function () {
         return view('CRUD-PAGE.addProduct');
     });
+
+    Route::post('/register', [PetugasController::class, 'register']);
+    Route::post('/login', [PetugasController::class, 'login'])->name('login');
 });
 
 Route::prefix('/login-register')->group(function () {
