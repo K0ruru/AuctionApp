@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BarangController;
 
 // route group for petugas
 Route::prefix('/officer')->group(function () {
@@ -16,6 +17,8 @@ Route::prefix('/officer')->group(function () {
         return view('CRUD-PAGE.addProduct');
     });
 });
+
+Route::post('/addProduct', [BarangController::class, 'addProduct']);
 
 // route group for admin
 Route::prefix('/admin')->group(function () {

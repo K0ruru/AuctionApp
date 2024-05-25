@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id('id_barang');
             $table->string('nama_barang');
             $table->date('tgl_date');
+            $table->integer('harga_awal');
             $table->string('deskripsi');
         });
     }

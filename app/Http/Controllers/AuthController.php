@@ -20,17 +20,13 @@ class AuthController extends Controller
 
         // If the user doesn't exist or the password is incorrect, return an error
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            return response()->json(['message' => 'Invalid username or password'], 401);
+            return redirect()->back()->with('error', 'Invalid username or password')->withInput();
         }
 
-        // // Attempt to log in the user
-        // if (!$token = Auth::login($user)) {
-        //     return response()->json(['message' => 'Unauthorized'], 401);
-        // }
-
-        // Return the token
+        // Redirect to the home page upon successful login
         return redirect('/home');
     }
+
 
     public function register(Request $request)
     {
@@ -51,8 +47,6 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'telp' => $request->telp,
         ]);
-
-        $token = JWTAuth::fromUser($masyarakat);
 
         return redirect('/')->with('success', 'Registration successful. Please log in.');
     }
