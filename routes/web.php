@@ -22,19 +22,20 @@ Route::prefix('/officer')->group(function () {
 Route::post('/addProduct', [BarangController::class, 'addProduct']);
 
 // route group for admin
-Route::prefix('/admin')->group(function () {
+Route::middleware(['admin.auth'])->prefix('/admin')->group(function () {
     Route::get('/admin-dashboard', function () {
         return view('page.DashboardAdmin');
     })->name('admin/admin-dashboard');
 
-    // route add product for admin
     Route::get('/admin-product', function () {
         return view('CRUD-PAGE.addProduct');
     });
 
-    Route::post('/register', [PetugasController::class, 'register']);
-    Route::post('/login', [PetugasController::class, 'login'])->name('login');
+    Route::post('/logout', [PetugasController::class, 'logout'])->name('logout.petugas');
 });
+
+Route::post('/register', [PetugasController::class, 'register'])->name('register.petugas');
+Route::post('/login', [PetugasController::class, 'login'])->name('login');
 
 Route::prefix('/login-register')->group(function () {
     // Route for rendering the registration form for masyarakat
@@ -45,7 +46,7 @@ Route::prefix('/login-register')->group(function () {
     // Route for rendering the login form for admin or petugas
     Route::get('/login', function () {
         return view('page-login-admin-petugas.login');
-    });
+    })->name('login.view.petugas');
 
     // Route for login masyrakat
     Route::post('/login-masyarakat', [AuthController::class, 'login']);

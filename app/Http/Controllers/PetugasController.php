@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\EloquentUserProvider;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Petugas;
@@ -38,15 +39,16 @@ class PetugasController extends Controller
         return view('auth.login');
     }
 
+
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'username' => 'required|string',
             'password' => 'required|string',
-            'level' => 'required|string|in:admin,petugas',
         ]);
 
         if ($validator->fails()) {
+            Log::error('Validation failed for login request', ['errors' => $validator->errors()]);
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
@@ -55,13 +57,47 @@ class PetugasController extends Controller
         // Attempt to authenticate using the 'petugas' provider
         if (Auth::guard('petugas')->attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('admin/admin-dashboard')->with('success', 'Login successful');
+
+            $user = Auth::guard('petugas')->user();
+
+            // Check if the user has the required id_level
+            if ($user->id_level == 1) {
+                Log::info('User logged in successfully', ['user' => $user]);
+                return redirect()->intended('admin/admin-dashboard')->with('success', 'Login successful');
+            } else {
+                // Log out the user and redirect back with an error message
+                Log::warning('Unauthorized access attempt', ['user' => $user]);
+                Auth::guard('petugas')->logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return back()->withErrors([
+                    'username' => 'Unauthorized access. You do not have the required permissions.',
+                ]);
+            }
         }
 
+        Log::error('Authentication failed', ['credentials' => $credentials]);
         return back()->withErrors([
             'username' => 'The provided credentials do not match our records.',
         ]);
     }
+
+    public function logout(Request $request)
+    {
+        // Log out the authenticated user from the 'petugas' guard
+        Auth::guard('petugas')->logout();
+
+        // Invalidate the current session and regenerate the CSRF token
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        // Redirect the user to the login page with a success message
+        return redirect()->route('login.view.petugas')->with('success', 'You have been logged out.');
+
+    }
+
+
 
 
 }

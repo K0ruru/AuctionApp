@@ -32,18 +32,7 @@ class BarangController extends Controller
             'deskripsi' => $request->deskripsi,
         ]);
 
-        // Create a new Lelang record
-        $lelang = Lelang::create([
-            'nama_barang' => $request->nama_barang,
-            'id_user' => null, // Default value
-            'id_petugas' => auth()->id(), // Assuming the admin creating the item is logged in
-            'id_barang' => $barang->id, // Reference the newly created Barang
-            'tgl_lelang' => $request->tgl_date, // Or set the auction end date if different
-            'harga_akhir' => null, // Default value
-            'status' => 'pending', // Or any other default status
-        ]);
 
-        // Redirect or return response after successful creation
         return redirect()->back()->with('success', 'Product and auction added successfully!');
     }
 }
