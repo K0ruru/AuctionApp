@@ -5,10 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Barang;
-use App\Models\Lelang;
 
 class BarangController extends Controller
 {
+    public function queryProduct()
+    {
+        $barang = Barang::all();
+
+        return view('page.ProductListAdmin', ['barang' => $barang]);
+    }
+
+
     public function addProduct(Request $request)
     {
         // Validate the request data
@@ -33,6 +40,6 @@ class BarangController extends Controller
         ]);
 
 
-        return redirect()->back()->with('success', 'Product and auction added successfully!');
+        return redirect()->route('query.product')->with('success', 'Product and auction added successfully!');
     }
 }

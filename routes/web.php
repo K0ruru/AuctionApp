@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\PetugasController;
 
+
 // route group for petugas
 Route::prefix('/officer')->group(function () {
     // route for dashboard petugas
@@ -23,6 +24,7 @@ Route::prefix('/officer')->group(function () {
 
 Route::post('/addProduct', [BarangController::class, 'addProduct']);
 
+
 // route group for admin
 Route::middleware(['admin.auth'])->prefix('/admin')->group(function () {
     Route::get('/admin-dashboard', function () {
@@ -33,9 +35,7 @@ Route::middleware(['admin.auth'])->prefix('/admin')->group(function () {
         return view('CRUD-PAGE.addProduct');
     });
 
-    Route::get('/admin-product-list', function () {
-        return view('page.ProductListAdmin');
-    });
+    Route::get('/admin-product-list', [BarangController::class, 'queryProduct'])->name('query.product');
 
     Route::get('/admin-data-officer', function () {
         return view('CRUD-PAGE.addPetugas');
