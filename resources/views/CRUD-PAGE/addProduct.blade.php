@@ -90,40 +90,8 @@
             style="width: 450px;" alt="">
     </div>
 
-    <!-- EXAMPLE DATA UNTUK BARANG -->
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-8/12 mx-auto mt-32">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <th scope="col" class="px-6 py-3">Product name</th>
-                    <th scope="col" class="px-6 py-3">Date</th>
-                    <th scope="col" class="px-6 py-3">Starting Price</th>
-                    <th scope="col" class="px-6 py-3">Description</th>
-                    <th scope="col" class="px-6 py-3">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        Bananaphone 12</th>
-                    <td class="px-6 py-4">20/02/2024</td>
-                    <td class="px-6 py-4">Rp.100.000</td>
-                    <td class="px-6 py-4">Handphone Flagship</td>
-                    <td class="px-6 py-4">
-                        <form action="" method="post">
-                            @csrf
-                            <button type="submit" name="edit"
-                                class=" bg-yellow-300 p-2 rounded-lg text-black">Edit</button>
-                            |
-                            <button type="submit" name="delete"
-                                class=" bg-red-700 p-2 rounded-lg text-white">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
 
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/accounting.js/0.4.1/accounting.min.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     <script>

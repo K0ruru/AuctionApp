@@ -17,6 +17,10 @@ Route::prefix('/officer')->group(function () {
     Route::get('/officer-product', function () {
         return view('CRUD-PAGE.addProduct');
     });
+
+    Route::get('/officer-product-list', function () {
+        return view('page.ProductListPetugas');
+    });
 });
 
 Route::post('/addProduct', [BarangController::class, 'addProduct']);
@@ -29,6 +33,14 @@ Route::middleware(['admin.auth'])->prefix('/admin')->group(function () {
 
     Route::get('/admin-product', function () {
         return view('CRUD-PAGE.addProduct');
+    });
+
+    Route::get('/admin-product-list', function () {
+        return view('page.ProductListAdmin');
+    });
+
+    Route::get('/admin-data-officer', function () {
+        return view('CRUD-PAGE.addPetugas');
     });
 
     Route::post('/logout', [PetugasController::class, 'logout'])->name('logout.petugas');
