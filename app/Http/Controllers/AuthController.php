@@ -51,21 +51,7 @@ class AuthController extends Controller
         return redirect('/')->with('success', 'Registration successful. Please log in.');
     }
 
-    public function logout(Request $request)
-    {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
 
-        return response()->json(['message' => 'Logout successful'], 200);
-    }
 
-    protected function respondWithToken($token)
-    {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => JWTAuth::factory()->getTTL() * 60
-        ]);
-    }
+
 }
