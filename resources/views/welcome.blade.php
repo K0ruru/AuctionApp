@@ -31,6 +31,15 @@
         style="height:55vh;">
         <img src="{{ asset('images/Screenshot_20240507_205844-removebg-preview (1).png') }}" class="w-60 mb-5" />
         <p class="mb-10 font font-yellowtail text-3xl">Welcome back!</p>
+        @if ($errors->any())
+            <div class="mb-4">
+                <ul class="list-disc list-inside text-red-600">
+                    @foreach ($errors->all() as $error)
+                        <p>{{ $error }}</p>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <form class="max-w-sm mx-auto" action="{{ url('/login-register/login-masyarakat') }}" method="POST">
             @csrf
             <div class="mb-5">
@@ -50,12 +59,6 @@
         <p class="mt-24 font-poppins">Don't have an account? <a href="/login-register/sign-up"
                 class="font-poppins text-blue-600">Sign up here</a></p>
     </div>
-
-    @if (session('error'))
-        <script>
-            alert('{{ session('error') }}');
-        </script>
-    @endif
 </body>
 
 </html>

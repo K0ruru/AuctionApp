@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 
 // Import your custom middleware
 use App\Http\Middleware\AdminAuth;
+use App\Http\Middleware\MasyarakatAuth;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -17,6 +18,9 @@ return Application::configure(basePath: dirname(__DIR__))
         // Register your custom middleware
         $middleware->appendToGroup('admin.auth', [
             AdminAuth::class,
+        ]);
+        $middleware->appendToGroup('masyarakat.auth', [
+            MasyarakatAuth::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -29,6 +29,15 @@
         style="height:60vh;">
         <img src="{{ asset('images/Screenshot_20240507_205844-removebg-preview (1).png') }}" class="w-60 mb-5" />
         <p class="mb-10 font font-yellowtail text-3xl">let’s get started!</p>
+        @if ($errors->any())
+            <div class="mb-4">
+                <ul class="list-disc list-inside text-red-600">
+                    @foreach ($errors->all() as $error)
+                        <p>{{ $error }}</p>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <form class="max-w-sm mx-auto" action="{{ url('/login-register/sign-up') }}" method="POST">
             @csrf
             <div class="mb-5">
@@ -63,15 +72,6 @@
         <p class="mt-24 font-poppins">already have an account? <a href="/login-register/login"
                 class="font-poppins text-blue-600">login here</a></p>
     </div>
-
-    @if ($errors->any())
-        <script>
-            let errors = @json($errors->all());
-            errors.forEach(error => {
-                alert(error);
-            });
-        </script>
-    @endif
 
     @if (session('success'))
         <script>

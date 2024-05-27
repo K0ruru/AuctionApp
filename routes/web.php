@@ -7,12 +7,10 @@ use App\Http\Controllers\PetugasController;
 
 // route group for petugas
 Route::prefix('/officer')->group(function () {
-
     // route for dashboard petugas
     Route::get('/officer-dashboard', function () {
         return view('page.dashboardPetugas');
     });
-
     // route add product for petugas
     Route::get('/officer-product', function () {
         return view('CRUD-PAGE.addProduct');
@@ -77,14 +75,14 @@ Route::prefix('/login-register')->group(function () {
 });
 
 // Route to handle logout
-Route::post('/logout', [AuthController::class, 'logout']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout.masyarakat');
 
 // route for home website
-Route::get('/home', function () {
+Route::middleware(['masyarakat.auth'])->get('/home', function () {
     return view('page.Home');
 })->name('home');
 
 // route login for masyakarat
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('login.view.masyarakat');

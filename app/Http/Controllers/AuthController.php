@@ -6,25 +6,39 @@ use App\Models\Masyarakat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $credentials = $request->only('username', 'password');
+        $validator = Validator::make($request->all(), [
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ]);
 
-        // Find the user by username
-        $user = Masyarakat::where('username', $credentials['username'])->first();
-
-        // If the user doesn't exist or the password is incorrect, return an error
-        if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            return redirect()->back()->with('error', 'Invalid username or password')->withInput();
+        if ($validator->fails()) {
+            Log::error('Validation failed for login request', ['errors' => $validator->errors()]);
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // Redirect to the home page upon successful login
-        return redirect('/home');
+        $credentials = $request->only('username', 'password');
+
+        // Attempt to authenticate using the 'masyarakat' guard
+        if (Auth::guard('masyarakat')->attempt($credentials)) {
+            $request->session()->regenerate();
+
+            $user = Auth::guard('masyarakat')->user();
+            Log::info('User logged in successfully', ['user' => $user]);
+
+            return redirect()->intended('/home')->with('success', 'Login successful');
+        }
+
+        Log::error('Authentication failed', ['credentials' => $credentials]);
+        return back()->withErrors([
+            'username' => 'The provided credentials do not match our records.',
+        ]);
     }
 
 
@@ -53,19 +67,14 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::logout();
+        Auth::guard('masyarakat')->logout();
+
         $request->session()->invalidate();
+
         $request->session()->regenerateToken();
 
-        return response()->json(['message' => 'Logout successful'], 200);
+        return redirect()->route('login.view.masyarakat')->with('success', 'You have been logged out.');
     }
 
-    protected function respondWithToken($token)
-    {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => JWTAuth::factory()->getTTL() * 60
-        ]);
-    }
+
 }
