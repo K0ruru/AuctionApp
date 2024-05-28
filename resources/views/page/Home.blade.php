@@ -100,7 +100,7 @@
                     <p class="font-poppins">{{ $lelang->barang->deskripsi }}</p>
                     <div class="flex flex-col items-center w-9/12 mx-auto mt-10">
                         <!-- BUTTON UNTUK BID -->
-                        <button class="bidButton bg-black p-2 font-poppins text-white rounded-lg w-full">Place a bid</button>
+                        <button class="bidButton bg-black p-2 font-poppins text-white rounded-lg w-full" data-id-lelang="{{ $lelang->id }}" data-current-price="{{ $lelang->harga_akhir }}">Place a bid</button>
                     </div>
                 </div>
             </div>
@@ -111,6 +111,7 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Place Your Bid</h2>
+            <input type="hidden" id="idLelang" value="">
             <input type="range" id="bidRange" min="100000" max="5000000" step="10000">
             <div class="price-display">Rp. <span id="bidPrice">100000</span></div>
             <button id="submitBid" class="bg-black p-2 font-poppins text-white rounded-lg w-full">Submit Bid</button>
@@ -171,32 +172,92 @@
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Countdown script
             @foreach($lelangs as $lelang)
-                // Get the end date from the lelang data
                 var endDate = new Date('{{ $lelang->tgl_lelang }}').getTime();
                 var countdownElement = document.getElementById('countdown-{{ $lelang->id }}');
-
-                // Update the countdown every 1 second
                 var x = setInterval(function () {
                     var now = new Date().getTime();
                     var distance = endDate - now;
-
-                    // Time calculations for days, hours, minutes, and seconds
                     var days = Math.floor(distance / (1000 * 60 * 60 * 24));
                     var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                     var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                    // Display the result in the element with id="countdown-{id}"
                     countdownElement.innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
-
-                    // If the countdown is over, display "EXPIRED"
                     if (distance < 0) {
                         clearInterval(x);
                         countdownElement.innerHTML = "EXPIRED";
                     }
                 }, 1000);
             @endforeach
+
+            // Modal script
+            var modal = document.getElementById("myModal");
+            var span = document.getElementsByClassName("close")[0];
+
+            // Open the modal when a bid button is clicked
+            document.querySelectorAll('.bidButton').forEach(button => {
+                button.addEventListener('click', function() {
+                    var idLelang = this.getAttribute('data-id-lelang');
+                    var currentPrice = parseInt(this.getAttribute('data-current-price'));
+
+                    // Set the hidden input value and the range input values
+                    document.getElementById('idLelang').value = idLelang;
+                    var bidRange = document.getElementById('bidRange');
+                    bidRange.min = currentPrice + 10000;
+                    bidRange.value = currentPrice + 10000;
+                    document.getElementById('bidPrice').innerText = bidRange.value;
+
+                    modal.style.display = "block";
+                });
+            });
+
+            // Close the modal
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // Update the bid price display when the range input changes
+            document.getElementById('bidRange').addEventListener('input', function() {
+                document.getElementById('bidPrice').innerText = this.value;
+            });
+
+            // Submit bid button handler
+            document.getElementById('submitBid').addEventListener('click', function() {
+                var idLelang = document.getElementById('idLelang').value;
+                var bidAmount = document.getElementById('bidRange').value;
+
+                // Submit the bid using AJAX or a form submission
+                // Example AJAX code (requires jQuery or other AJAX library):
+                /*
+                $.ajax({
+                    url: '/submit-bid',
+                    method: 'POST',
+                    data: {
+                        id_lelang: idLelang,
+                        bid_amount: bidAmount,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        alert('Bid submitted successfully!');
+                        modal.style.display = "none";
+                    },
+                    error: function(xhr) {
+                        alert('An error occurred. Please try again.');
+                    }
+                });
+                */
+                // For now, just log the values and close the modal
+                console.log('Bid submitted:', { id_lelang: idLelang, bid_amount: bidAmount });
+                modal.style.display = "none";
+            });
+
+            // Close the modal if the user clicks outside of it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
         });
     </script>
 
