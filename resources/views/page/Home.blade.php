@@ -85,7 +85,7 @@
         @foreach($lelangs as $lelang)
             <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 card"
                 data-id="{{ $lelang->id }}" data-name="{{ $lelang->barang->nama_barang }}" data-starting-price="{{ $lelang->barang->harga_awal }}"
-                data-aos="fade-up" data-aos-delay="600">
+                data-end-time="{{ $lelang->tgl_lelang }}" data-aos="fade-up" data-aos-delay="600">
                 <img class="rounded-t-lg w-72 mx-auto" src="{{ asset('images/product-images/12608-removebg-preview.png') }}" alt="{{ $lelang->barang->nama_barang }}" />
                 <div class="p-5">
                     <!-- NAMA BARANG DAN HARGA BARANG -->
@@ -107,12 +107,39 @@
         @endforeach
     </section>
 
+    <script>
+        // Update the countdown for each auction item
+        function updateCountdowns() {
+            var auctions = document.querySelectorAll('.card');
+            auctions.forEach(function(auction) {
+                var endTime = new Date(auction.getAttribute('data-end-time'));
+                var currentTime = new Date();
+                var timeDifference = endTime - currentTime;
+
+                var days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+                // Update the countdown element
+                auction.querySelector('span').innerHTML = days + " : " + hours + " : " + minutes + " : " + seconds;
+            });
+        }
+
+        // Call updateCountdowns initially
+        updateCountdowns();
+
+        // Update countdowns every second
+        setInterval(updateCountdowns, 1000);
+    </script>
+
+
     <div id="myModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Place Your Bid</h2>
             <input type="hidden" id="idLelang" value="">
-            <input type="range" id="bidRange" min="100000" max="5000000" step="10000">
+            <input type="range" id="bidRange" min="100000" max="10000000" step="10000">
             <div class="price-display">Rp. <span id="bidPrice">100000</span></div>
             <button id="submitBid" class="bg-black p-2 font-poppins text-white rounded-lg w-full">Submit Bid</button>
         </div>
@@ -172,24 +199,7 @@
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Countdown script
-            @foreach($lelangs as $lelang)
-                var endDate = new Date('{{ $lelang->tgl_lelang }}').getTime();
-                var countdownElement = document.getElementById('countdown-{{ $lelang->id }}');
-                var x = setInterval(function () {
-                    var now = new Date().getTime();
-                    var distance = endDate - now;
-                    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                    countdownElement.innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
-                    if (distance < 0) {
-                        clearInterval(x);
-                        countdownElement.innerHTML = "EXPIRED";
-                    }
-                }, 1000);
-            @endforeach
+
 
             // Modal script
             var modal = document.getElementById("myModal");
