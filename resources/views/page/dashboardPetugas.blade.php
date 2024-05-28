@@ -66,7 +66,7 @@
                 <div class="bg-white border w-80 border-gray-200 rounded-3xl shadow-3xl p-6 dark:bg-gray-800 dark:border-gray-700" style="border-radius: 20px;">
                         <img class="rounded-lg w-52 p-3 mt-4 mx-auto" src="{{ asset('images/checklist.gif') }}" alt="" />
                     <div class="p-5 flex justify-center rounded-md">
-                        <a href="#" class="inline-flex mx-auto items-center px-3 py-2 text-sm font-medium text-center text-white bg-black rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        <a href="/admin/admin-report" class="inline-flex mx-auto items-center px-3 py-2 text-sm font-medium text-center text-white bg-black rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             Generate Report
                         </a>
                     </div>

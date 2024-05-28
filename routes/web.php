@@ -43,6 +43,10 @@ Route::middleware(['admin.auth'])->prefix('/admin')->group(function () {
         return view('CRUD-PAGE.addPetugas');
     });
 
+    Route::get('/admin-report', function () {
+        return view('page.History');
+    });
+
     Route::post('/logout', [PetugasController::class, 'logout'])->name('logout.petugas');
 });
 
