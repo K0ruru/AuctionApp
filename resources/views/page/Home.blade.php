@@ -81,57 +81,30 @@
         data-aos-delay="500">New Auctions!</h1>
 
     <!-- section-product -->
-    <section
-        class="h-auto mb-5 flex justify-center mx-auto items-center gap-5 flex-wrap p-2 lg:w-auto sm:h-auto sm:mb-5 sm:p-10 lg:p-52"
-        data-aos="fade-up" data-aos-delay="400">
+    <section class="h-auto mb-5 flex justify-center mx-auto items-center gap-5 flex-wrap p-2 lg:w-auto sm:h-auto sm:mb-5 sm:p-10 lg:p-52" data-aos="fade-up" data-aos-delay="400">
+        @foreach($lelangs as $lelang)
+            <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 card"
+                data-id="{{ $lelang->id }}" data-name="{{ $lelang->barang->nama_barang }}" data-starting-price="{{ $lelang->barang->harga_awal }}"
+                data-aos="fade-up" data-aos-delay="600">
+                <img class="rounded-t-lg w-72 mx-auto" src="{{ asset('images/product-images/12608-removebg-preview.png') }}" alt="{{ $lelang->barang->nama_barang }}" />
+                <div class="p-5">
+                    <!-- NAMA BARANG DAN HARGA BARANG -->
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $lelang->barang->nama_barang }} | Rp. {{ number_format($lelang->barang->harga_awal, 0, ',', '.') }}</h5>
 
-        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 card"
-            data-id="1" data-name="Phone 3" data-starting-price="200000" data-aos="fade-up" data-aos-delay="600">
-            <img class="rounded-t-lg w-72 mx-auto" src="{{ asset('images/product-images/12608-removebg-preview.png') }}"
-                alt="" />
-            <div class="p-5">
-                <!-- NAMA BARANG DAN HARGA BARANG -->
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Phone 3 | Rp. 200.000
-                </h5>
+                    <!-- DURASI PELELANGAN -->
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                        <span id="countdown-{{ $lelang->id }}"></span> <br> End Time
+                    </p>
 
-                <!-- DURASI PELELANGAN -->
-                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">2:02:30 <br> End Time</p>
-
-                <!-- DESKRIPSI BARANG -->
-                <p class="font-poppins">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Assumenda, itaque.
-                    Porro, fugit nobis ducimus omnis quis molestias nihil perspiciatis repudiandae corrupti eiu, id
-                    obcaecati aut?</p>
-                <div class="flex flex-col items-center w-9/12 mx-auto mt-10">
-                    <!-- BUTTON UNTUK BID -->
-                    <button class="bidButton bg-black p-2 font-poppins text-white rounded-lg w-full">Place a
-                        bid</button>
+                    <!-- DESKRIPSI BARANG -->
+                    <p class="font-poppins">{{ $lelang->barang->deskripsi }}</p>
+                    <div class="flex flex-col items-center w-9/12 mx-auto mt-10">
+                        <!-- BUTTON UNTUK BID -->
+                        <button class="bidButton bg-black p-2 font-poppins text-white rounded-lg w-full">Place a bid</button>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 card"
-            data-id="1" data-name="Phone 3" data-starting-price="200000" data-aos="fade-up" data-aos-delay="600">
-            <img class="rounded-t-lg w-72 mx-auto" src="{{ asset('images/product-images/12608-removebg-preview.png') }}"
-                alt="" />
-            <div class="p-5">
-                <!-- NAMA BARANG DAN HARGA BARANG -->
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Phone 3 | Rp. 200.000
-                </h5>
-
-                <!-- DURASI PELELANGAN -->
-                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">2:02:30 <br> End Time</p>
-
-                <!-- DESKRIPSI BARANG -->
-                <p class="font-poppins">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Assumenda, itaque.
-                    Porro, fugit nobis ducimus omnis quis molestias nihil perspiciatis repudiandae corrupti eiu, id
-                    obcaecati aut?</p>
-                <div class="flex flex-col items-center w-9/12 mx-auto mt-10">
-                    <!-- BUTTON UNTUK BID -->
-                    <button class="bidButton bg-black p-2 font-poppins text-white rounded-lg w-full">Place a
-                        bid</button>
-                </div>
-            </div>
-        </div>
+        @endforeach
     </section>
 
     <div id="myModal" class="modal">
@@ -195,6 +168,36 @@
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
         AOS.init();
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            @foreach($lelangs as $lelang)
+                // Get the end date from the lelang data
+                var endDate = new Date('{{ $lelang->tgl_lelang }}').getTime();
+                var countdownElement = document.getElementById('countdown-{{ $lelang->id }}');
+
+                // Update the countdown every 1 second
+                var x = setInterval(function () {
+                    var now = new Date().getTime();
+                    var distance = endDate - now;
+
+                    // Time calculations for days, hours, minutes, and seconds
+                    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    // Display the result in the element with id="countdown-{id}"
+                    countdownElement.innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+
+                    // If the countdown is over, display "EXPIRED"
+                    if (distance < 0) {
+                        clearInterval(x);
+                        countdownElement.innerHTML = "EXPIRED";
+                    }
+                }, 1000);
+            @endforeach
+        });
     </script>
 
 </body>

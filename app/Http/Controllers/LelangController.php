@@ -39,4 +39,29 @@ class LelangController extends Controller
         return redirect()->back()->with('success', 'Auction opened successfully.');
     }
 
+    public function queryLelang() {
+        // Retrieve all records from the lelang table
+        $lelangs = Lelang::all();
+
+        // Extract all id_barang values from the lelang records
+        $idBarangValues = $lelangs->pluck('id_barang')->toArray();
+
+        // Retrieve the corresponding records from the barang table using the extracted id_barang values
+        $barangs = Barang::whereIn('id_barang', $idBarangValues)->get();
+
+        // Create an associative array to map id_barang to barang details
+        $barangMap = $barangs->keyBy('id_barang');
+
+        // Merge the lelang data with the corresponding barang data
+        $lelangs = $lelangs->map(function ($lelang) use ($barangMap) {
+            $lelang->barang = $barangMap->get($lelang->id_barang);
+            return $lelang;
+        });
+
+        // Pass the merged data to the 'page.Home' view
+        return view('page.Home', ['lelangs' => $lelangs]);
+    }
+
+
+
 }

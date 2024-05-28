@@ -80,9 +80,7 @@ Route::prefix('/login-register')->group(function () {
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout.masyarakat');
 
 // route for home website
-Route::middleware(['masyarakat.auth'])->get('/home', function () {
-    return view('page.Home');
-})->name('home');
+Route::middleware(['masyarakat.auth'])->get('/home', [LelangController::class, 'queryLelang'])->name('home');
 
 // route login for masyakarat
 Route::get('/', function () {
