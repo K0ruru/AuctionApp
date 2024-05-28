@@ -7,6 +7,7 @@ use App\Http\Controllers\PetugasController;
 use App\Http\Controllers\LelangController;
 
 
+
 // route group for petugas
 Route::prefix('/officer')->group(function () {
     // route for dashboard petugas
@@ -81,6 +82,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout.masyarak
 
 // route for home website
 Route::middleware(['masyarakat.auth'])->get('/home', [LelangController::class, 'queryLelang'])->name('home');
+Route::post('/place-bid', [LelangController::class, 'placeBid'])->name('placeBid');
 
 // route login for masyakarat
 Route::get('/', function () {

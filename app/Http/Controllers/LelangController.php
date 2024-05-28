@@ -62,7 +62,28 @@ class LelangController extends Controller
         return view('page.Home', ['lelangs' => $lelangs]);
     }
 
+    public function placeBid(Request $request) {
 
+        // Retrieve the auction (lelang) by ID
+        $lelang = Lelang::findOrFail($request->lelang_id);
+
+        $userId = auth()->guard('masyarakat')->id();
+
+        // Check if the bid amount is greater than the current highest bid
+        if ($request->bid_amount > $lelang->harga_akhir) {
+            // Update the auction with the new bid amount and user ID
+            $lelang->update([
+                'id_user' => $userId,
+                'harga_akhir' => $request->bid_amount,
+            ]);
+
+            // Redirect back with a success message
+            return redirect('/home')->back()->with('success', 'Bid placed successfully.');
+        } else {
+            // Redirect back with an error message if the bid amount is not higher than the current highest bid
+            return redirect('/home')->back()->with('error', 'Bid amount must be higher than the current highest bid.');
+        }
+    }
 
 }
 

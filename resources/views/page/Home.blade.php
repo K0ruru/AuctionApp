@@ -134,16 +134,22 @@
     </script>
 
 
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Place Your Bid</h2>
-            <input type="hidden" id="idLelang" value="">
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Place Your Bid</h2>
+        <!-- Hidden form to submit bid -->
+        <form id="bidForm" action="{{ route('placeBid') }}" method="POST">
+            @csrf
+            <input type="hidden" name="user_id" value="{{ auth()->guard('masyarakat')->id() }}">
+            <input type="hidden" name="lelang_id" id="bidLelangId" value="">
+            <input type="hidden" name="bid_amount" id="bidAmount" value="">
             <input type="range" id="bidRange" min="100000" max="10000000" step="10000">
             <div class="price-display">Rp. <span id="bidPrice">100000</span></div>
-            <button id="submitBid" class="bg-black p-2 font-poppins text-white rounded-lg w-full">Submit Bid</button>
-        </div>
+            <button type="submit" id="submitBid" class="bg-black p-2 font-poppins text-white rounded-lg w-full">Submit Bid</button>
+        </form>
     </div>
+</div>
 
 
 
@@ -199,20 +205,15 @@
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-
-
-            // Modal script
             var modal = document.getElementById("myModal");
             var span = document.getElementsByClassName("close")[0];
 
-            // Open the modal when a bid button is clicked
             document.querySelectorAll('.bidButton').forEach(button => {
                 button.addEventListener('click', function() {
                     var idLelang = this.getAttribute('data-id-lelang');
                     var currentPrice = parseInt(this.getAttribute('data-current-price'));
 
-                    // Set the hidden input value and the range input values
-                    document.getElementById('idLelang').value = idLelang;
+                    document.getElementById('bidLelangId').value = idLelang;
                     var bidRange = document.getElementById('bidRange');
                     bidRange.min = currentPrice + 10000;
                     bidRange.value = currentPrice + 10000;
@@ -222,47 +223,20 @@
                 });
             });
 
-            // Close the modal
             span.onclick = function() {
                 modal.style.display = "none";
             }
 
-            // Update the bid price display when the range input changes
             document.getElementById('bidRange').addEventListener('input', function() {
                 document.getElementById('bidPrice').innerText = this.value;
             });
 
-            // Submit bid button handler
             document.getElementById('submitBid').addEventListener('click', function() {
-                var idLelang = document.getElementById('idLelang').value;
-                var bidAmount = document.getElementById('bidRange').value;
-
-                // Submit the bid using AJAX or a form submission
-                // Example AJAX code (requires jQuery or other AJAX library):
-                /*
-                $.ajax({
-                    url: '/submit-bid',
-                    method: 'POST',
-                    data: {
-                        id_lelang: idLelang,
-                        bid_amount: bidAmount,
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        alert('Bid submitted successfully!');
-                        modal.style.display = "none";
-                    },
-                    error: function(xhr) {
-                        alert('An error occurred. Please try again.');
-                    }
-                });
-                */
-                // For now, just log the values and close the modal
-                console.log('Bid submitted:', { id_lelang: idLelang, bid_amount: bidAmount });
+                document.getElementById('bidAmount').value = document.getElementById('bidRange').value;
+                document.getElementById('bidForm').submit();
                 modal.style.display = "none";
             });
 
-            // Close the modal if the user clicks outside of it
             window.onclick = function(event) {
                 if (event.target == modal) {
                     modal.style.display = "none";
