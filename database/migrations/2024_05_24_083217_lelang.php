@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('lelang', function (Blueprint $table) {
             $table->id('id_lelang');
-            $table->unsignedBigInteger('id_user');
+            $table->unsignedBigInteger('id_user')->nullable();
             $table->unsignedBigInteger('id_petugas');
             $table->unsignedBigInteger('id_barang');
             $table->date('tgl_lelang');

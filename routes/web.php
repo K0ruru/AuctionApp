@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\PetugasController;
+use App\Http\Controllers\LelangController;
 
 
 // route group for petugas
@@ -36,6 +37,7 @@ Route::middleware(['admin.auth'])->prefix('/admin')->group(function () {
     });
 
     Route::get('/admin-product-list', [BarangController::class, 'queryProduct'])->name('query.product');
+    Route::post('/addLelang', [LelangController::class, 'addLelang'])->name('add.lelang');
 
     Route::get('/admin-data-officer', function () {
         return view('CRUD-PAGE.addPetugas');

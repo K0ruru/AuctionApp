@@ -78,6 +78,8 @@
                         <td class="px-6 py-4">Rp. {{ number_format($item->harga_awal, 0, ',', '.') }}</td>
                         <td class="px-6 py-4">{{ $item->deskripsi }}</td>
                         <td class="px-6 py-4">
+                            <button onclick="openForm('{{ $item->id_barang }}')"
+                                class="bg-blue-500 p-2 rounded-lg text-white mr-2">Open Auction</button>
                             <form action="" method="post">
                                 @csrf
                                 <button type="submit" name="edit"
@@ -92,6 +94,29 @@
             </tbody>
         </table>
     </div>
+
+    <div id="auctionForm" class="fixed top-0 left-0 right-0 bottom-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden">
+        <div class="bg-white p-8 rounded-lg">
+            <h2 class="text-2xl font-bold mb-4">Auction Product</h2>
+            <form action="{{ route('add.lelang')}}" method="post">
+                @csrf
+                <div class="mb-4">
+                    <label for="end_date" class="block text-sm font-medium text-gray-700">End Auction Date</label>
+                    <input type="date" name="end_date" id="end_date" class="mt-1 p-2 border rounded-lg w-full">
+                    <input type="hidden" name="id_barang" id="id_barang" value="">
+                </div>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Open For Auction</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openForm(idBarang) {
+            document.getElementById('id_barang').value = idBarang;
+            document.getElementById('auctionForm').classList.remove('hidden');
+        }
+    </script>
+
 
 </body>
 
