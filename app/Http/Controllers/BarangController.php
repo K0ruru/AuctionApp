@@ -9,6 +9,25 @@ use App\Models\Lelang;
 
 class BarangController extends Controller
 {
+    public function queryProduct()
+{
+    // Retrieve all Barang records
+    $barang = Barang::all();
+
+    // Loop through each Barang record to add the 'status' from the Lelang table
+    foreach ($barang as $item) {
+        // Retrieve the status from the Lelang table for the current Barang record
+        $status = Lelang::where('id_barang', $item->id_barang)->value('status');
+
+        // Add the status to the current Barang record
+        $item->status = $status;
+    }
+
+    // Pass the modified $barang collection to the view
+    return view('page.ProductListAdmin', ['barang' => $barang]);
+}
+
+
     public function addProduct(Request $request)
     {
         // Validate the request data
@@ -33,6 +52,6 @@ class BarangController extends Controller
         ]);
 
 
-        return redirect()->back()->with('success', 'Product and auction added successfully!');
+        return redirect()->route('query.product')->with('success', 'Product and auction added successfully!');
     }
 }

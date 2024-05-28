@@ -4,15 +4,16 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\PetugasController;
+use App\Http\Controllers\LelangController;
+
+
 
 // route group for petugas
 Route::prefix('/officer')->group(function () {
-
     // route for dashboard petugas
     Route::get('/officer-dashboard', function () {
         return view('page.dashboardPetugas');
     });
-
     // route add product for petugas
     Route::get('/officer-product', function () {
         return view('CRUD-PAGE.addProduct');
@@ -25,6 +26,7 @@ Route::prefix('/officer')->group(function () {
 
 Route::post('/addProduct', [BarangController::class, 'addProduct']);
 
+
 // route group for admin
 Route::middleware(['admin.auth'])->prefix('/admin')->group(function () {
     Route::get('/admin-dashboard', function () {
@@ -35,9 +37,8 @@ Route::middleware(['admin.auth'])->prefix('/admin')->group(function () {
         return view('CRUD-PAGE.addProduct');
     });
 
-    Route::get('/admin-product-list', function () {
-        return view('page.ProductListAdmin');
-    });
+    Route::get('/admin-product-list', [BarangController::class, 'queryProduct'])->name('query.product');
+    Route::post('/addLelang', [LelangController::class, 'addLelang'])->name('add.lelang');
 
     Route::get('/admin-data-officer', function () {
         return view('CRUD-PAGE.addPetugas');
@@ -81,14 +82,13 @@ Route::prefix('/login-register')->group(function () {
 });
 
 // Route to handle logout
-Route::post('/logout', [AuthController::class, 'logout']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout.masyarakat');
 
 // route for home website
-Route::get('/home', function () {
-    return view('page.Home');
-})->name('home');
+Route::middleware(['masyarakat.auth'])->get('/home', [LelangController::class, 'queryLelang'])->name('home');
+Route::post('/place-bid', [LelangController::class, 'placeBid'])->name('placeBid');
 
 // route login for masyakarat
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('login.view.masyarakat');
