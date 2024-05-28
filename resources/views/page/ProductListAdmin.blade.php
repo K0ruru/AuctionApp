@@ -65,6 +65,7 @@
                     <th scope="col" class="px-6 py-3">Created At</th>
                     <th scope="col" class="px-6 py-3">Starting Price</th>
                     <th scope="col" class="px-6 py-3">Description</th>
+                    <th scope="col" class="px-6 py-3">Status</th>
                     <th scope="col" class="px-6 py-3">Action</th>
                 </tr>
             </thead>
@@ -77,6 +78,7 @@
                         <td class="px-6 py-4">{{ $item->tgl_date }}</td>
                         <td class="px-6 py-4">Rp. {{ number_format($item->harga_awal, 0, ',', '.') }}</td>
                         <td class="px-6 py-4">{{ $item->deskripsi }}</td>
+                        <td class="px-6 py-4">{{ $item->status ?? 'tutup' }}</td>
                         <td class="px-6 py-4">
                             <button onclick="openForm('{{ $item->id_barang }}')"
                                 class="bg-blue-500 p-2 rounded-lg text-white mr-2">Open Auction</button>

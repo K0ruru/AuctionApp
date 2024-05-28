@@ -5,15 +5,27 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Barang;
+use App\Models\Lelang;
 
 class BarangController extends Controller
 {
     public function queryProduct()
-    {
-        $barang = Barang::all();
+{
+    // Retrieve all Barang records
+    $barang = Barang::all();
 
-        return view('page.ProductListAdmin', ['barang' => $barang]);
+    // Loop through each Barang record to add the 'status' from the Lelang table
+    foreach ($barang as $item) {
+        // Retrieve the status from the Lelang table for the current Barang record
+        $status = Lelang::where('id_barang', $item->id_barang)->value('status');
+
+        // Add the status to the current Barang record
+        $item->status = $status;
     }
+
+    // Pass the modified $barang collection to the view
+    return view('page.ProductListAdmin', ['barang' => $barang]);
+}
 
 
     public function addProduct(Request $request)
