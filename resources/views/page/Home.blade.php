@@ -4,26 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Home</title>
     <!-- RESOURCES -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Yellowtail&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Yellowtail&display=swap"
-        rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rampart+One&family=Yellowtail&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;700&family=Rampart+One&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="{{ asset('css/global.css') }}">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
 </head>
 
 <body>
@@ -32,7 +24,6 @@
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
             <img src="{{ asset('images/Screenshot_20240507_205844-removebg-preview (1).png') }}" class="h-8"
                 alt="Flowbite Logo" />
-            </a>
             <button data-collapse-toggle="navbar-default" type="button"
                 class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
                 aria-controls="navbar-default" aria-expanded="false">
@@ -81,26 +72,35 @@
         data-aos-delay="500">New Auctions!</h1>
 
     <!-- section-product -->
-    <section class="h-auto mb-5 flex justify-center mx-auto items-center gap-5 flex-wrap p-2 lg:w-auto sm:h-auto sm:mb-5 sm:p-10 lg:p-52" data-aos="fade-up" data-aos-delay="400">
-        @foreach($lelangs as $lelang)
+    <section
+        class="h-auto mb-5 flex justify-center mx-auto items-center gap-5 flex-wrap p-2 lg:w-auto sm:h-auto sm:mb-5 sm:p-10 lg:p-52"
+        data-aos="fade-up" data-aos-delay="400">
+        @foreach ($lelangs as $lelang)
             <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 card"
-                data-id="{{ $lelang->id }}" data-name="{{ $lelang->barang->nama_barang }}" data-starting-price="{{ $lelang->barang->harga_awal }}"
-                data-end-time="{{ $lelang->tgl_lelang }}" data-aos="fade-up" data-aos-delay="600">
-                <img class="rounded-t-lg w-72 mx-auto" src="{{ asset('images/product-images/12608-removebg-preview.png') }}" alt="{{ $lelang->barang->nama_barang }}" />
+                data-id="{{ $lelang->id }}" data-name="{{ $lelang->barang->nama_barang }}"
+                data-starting-price="{{ $lelang->barang->harga_awal }}" data-end-time="{{ $lelang->tgl_lelang }}"
+                data-aos="fade-up" data-aos-delay="600">
+                <img class="rounded-t-lg w-72 mx-auto"
+                    src="{{ asset('images/product-images/12608-removebg-preview.png') }}"
+                    alt="{{ $lelang->barang->nama_barang }}" />
                 <div class="p-5">
                     <!-- NAMA BARANG DAN HARGA BARANG -->
-                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $lelang->barang->nama_barang }} | Rp. {{ number_format($lelang->barang->harga_awal, 0, ',', '.') }}</h5>
-
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                        {{ $lelang->barang->nama_barang }} | Rp.
+                        {{ number_format($lelang->harga_akhir, 0, ',', '.') }}
+                    </h5>
                     <!-- DURASI PELELANGAN -->
                     <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
                         <span id="countdown-{{ $lelang->id }}"></span> <br> End Time
                     </p>
-
                     <!-- DESKRIPSI BARANG -->
                     <p class="font-poppins">{{ $lelang->barang->deskripsi }}</p>
                     <div class="flex flex-col items-center w-9/12 mx-auto mt-10">
                         <!-- BUTTON UNTUK BID -->
-                        <button class="bidButton bg-black p-2 font-poppins text-white rounded-lg w-full" data-id-lelang="{{ $lelang->id }}" data-current-price="{{ $lelang->harga_akhir }}">Place a bid</button>
+                        <button class="bidButton bg-black p-2 font-poppins text-white rounded-lg w-full"
+                            data-id-lelang="{{ $lelang->id_lelang }}"
+                            data-current-price="{{ $lelang->harga_akhir }}">Place
+                            a bid</button>
                     </div>
                 </div>
             </div>
@@ -133,23 +133,36 @@
         setInterval(updateCountdowns, 1000);
     </script>
 
-
-<div id="myModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Place Your Bid</h2>
-        <!-- Hidden form to submit bid -->
-        <form id="bidForm" action="{{ route('placeBid') }}" method="POST">
-            @csrf
-            <input type="hidden" name="user_id" value="{{ auth()->guard('masyarakat')->id() }}">
-            <input type="hidden" name="lelang_id" id="bidLelangId" value="">
-            <input type="hidden" name="bid_amount" id="bidAmount" value="">
-            <input type="range" id="bidRange" min="100000" max="10000000" step="10000">
-            <div class="price-display">Rp. <span id="bidPrice">100000</span></div>
-            <button type="submit" id="submitBid" class="bg-black p-2 font-poppins text-white rounded-lg w-full">Submit Bid</button>
-        </form>
+    <!-- Place Your Bid Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Place Your Bid</h2>
+            <form id="bidForm">
+                @csrf
+                <input type="hidden" name="user_id" value="{{ auth()->guard('masyarakat')->id() }}">
+                <input type="hidden" name="id_lelang" id="bidLelangId" value="">
+                <input type="hidden" name="bid_amount" id="bidAmount" value="">
+                <input type="range" id="bidRange" min="100000" max="10000000" step="10000">
+                <div class="price-display">Rp. <span id="bidPrice">100000</span></div>
+                <button type="button" id="submitBid"
+                    class="bg-black p-2 font-poppins text-white rounded-lg w-full">Submit Bid</button>
+            </form>
+        </div>
     </div>
-</div>
+
+    <!-- ALERTS -->
+    <div id="successAlert"
+        class="hidden fixed top-0 inset-x-0 p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+        role="alert">
+        <span class="font-medium">Success!</span> Your bid has been placed successfully.
+    </div>
+
+    <div id="errorAlert"
+        class="hidden fixed top-0 inset-x-0 p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
+        role="alert">
+        <span class="font-medium">Error!</span> <span id="errorMessage"></span>
+    </div>
 
 
 
@@ -178,7 +191,6 @@
         </div>
     </section>
 
-
     <div>
         <div class="h-28 bg-stone-800 text-white font-bold font-poppins flex justify-between p-8 items-center">
             <p>Auction Inc.</p>
@@ -186,12 +198,6 @@
         </div>
     </div>
 
-    <!-- ALERT -->
-    <div id="successAlert"
-        class="hidden fixed top-0 inset-x-0 p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-        role="alert">
-        <span class="font-medium">Success!</span> Your bid has been placed successfully.
-    </div>
 
     <!-- javascript & source -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -202,47 +208,98 @@
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
         AOS.init();
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             var modal = document.getElementById("myModal");
             var span = document.getElementsByClassName("close")[0];
+            var bidForm = document.getElementById("bidForm");
 
-            document.querySelectorAll('.bidButton').forEach(button => {
-                button.addEventListener('click', function() {
-                    var idLelang = this.getAttribute('data-id-lelang');
-                    var currentPrice = parseInt(this.getAttribute('data-current-price'));
+            // Function to handle bid button click
+            function handleBidButtonClick() {
+                var idLelang = this.getAttribute('data-id-lelang');
+                var currentPrice = parseInt(this.getAttribute('data-current-price'));
 
-                    document.getElementById('bidLelangId').value = idLelang;
-                    var bidRange = document.getElementById('bidRange');
-                    bidRange.min = currentPrice + 10000;
-                    bidRange.value = currentPrice + 10000;
-                    document.getElementById('bidPrice').innerText = bidRange.value;
+                // Set the hidden input value for id_lelang
+                document.getElementById('bidLelangId').value = idLelang;
+                var bidRange = document.getElementById('bidRange');
 
-                    modal.style.display = "block";
-                });
-            });
+                // Set the minimum value of the range to currentPrice + 10000
+                bidRange.min = currentPrice + 10000;
+                bidRange.value = currentPrice + 10000;
 
-            span.onclick = function() {
-                modal.style.display = "none";
+                // Update the displayed bid price
+                document.getElementById('bidPrice').innerText = bidRange.value;
+
+                // Show the modal
+                modal.style.display = "block";
             }
 
+            // Add click event listeners to all bid buttons
+            document.querySelectorAll('.bidButton').forEach(function(button) {
+                button.addEventListener('click', handleBidButtonClick);
+            });
+
+            // Close the modal when the 'x' is clicked
+            span.onclick = function() {
+                modal.style.display = "none";
+            };
+
+            // Update the displayed bid price when the range input changes
             document.getElementById('bidRange').addEventListener('input', function() {
                 document.getElementById('bidPrice').innerText = this.value;
             });
 
+            // Handle the form submission via AJAX
             document.getElementById('submitBid').addEventListener('click', function() {
-                document.getElementById('bidAmount').value = document.getElementById('bidRange').value;
-                document.getElementById('bidForm').submit();
-                modal.style.display = "none";
+                var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                var lelangId = document.getElementById('bidLelangId').value;
+                var bidAmount = document.getElementById('bidRange').value;
+
+                var data = {
+                    _token: csrfToken,
+                    id_lelang: lelangId,
+                    bid_amount: bidAmount
+                };
+
+                fetch('{{ route('place.bid') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok: ' + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            // Hide the modal after successful bid
+                            modal.style.display = "none";
+                            window.location.reload();
+                            document.getElementById('successAlert').classList.remove('hidden');
+                        } else {
+                            document.getElementById('errorMessage').innerText = data.error ||
+                                'Unknown error occurred';
+                            document.getElementById('errorAlert').classList.remove('hidden');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        document.getElementById('errorMessage').innerText = error.message;
+                        document.getElementById('errorAlert').classList.remove('hidden');
+                    });
             });
 
+            // Close the modal when clicking outside of it
             window.onclick = function(event) {
                 if (event.target == modal) {
                     modal.style.display = "none";
                 }
-            }
-        });
+            };
+        });;
     </script>
 
 </body>

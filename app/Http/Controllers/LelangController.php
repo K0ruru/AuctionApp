@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Barang;
 use App\Models\Lelang;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class LelangController extends Controller
 {
-    public function addLelang(Request $request) {
+    public function addLelang(Request $request)
+    {
         // Validate the request data
         $request->validate([
             'end_date' => 'required|date|after_or_equal:today', // Assuming end date must be in the future
-            // Add more validation rules if needed
         ]);
 
         // Retrieve the product ID from the request
@@ -20,7 +21,6 @@ class LelangController extends Controller
 
         // Retrieve the product details
         $product = Barang::where('id_barang', $id_barang)->first();
-
 
         // Retrieve the current authenticated user's ID
         $userId = auth()->guard('petugas')->id();
@@ -39,7 +39,8 @@ class LelangController extends Controller
         return redirect()->back()->with('success', 'Auction opened successfully.');
     }
 
-    public function queryLelang() {
+    public function queryLelang()
+    {
         // Retrieve all records from the lelang table
         $lelangs = Lelang::all();
 
@@ -62,29 +63,41 @@ class LelangController extends Controller
         return view('page.Home', ['lelangs' => $lelangs]);
     }
 
-    public function placeBid(Request $request) {
-
-        // Retrieve the auction (lelang) by ID
-        $lelang = Lelang::findOrFail($request->lelang_id);
-
-        $userId = auth()->guard('masyarakat')->id();
-
-        // Check if the bid amount is greater than the current highest bid
-        if ($request->bid_amount > $lelang->harga_akhir) {
-            // Update the auction with the new bid amount and user ID
-            $lelang->update([
-                'id_user' => $userId,
-                'harga_akhir' => $request->bid_amount,
+    public function placeBid(Request $request)
+    {
+        try {
+            // Validate the request data
+            $validatedData = $request->validate([
+                'bid_amount' => 'required|numeric|min:0', // Ensure bid_amount is numeric and non-negative
+                'id_lelang' => 'required|exists:lelang,id_lelang', // Ensure id_lelang exists in the lelangs table
             ]);
 
-            // Redirect back with a success message
-            return redirect('/home')->back()->with('success', 'Bid placed successfully.');
-        } else {
-            // Redirect back with an error message if the bid amount is not higher than the current highest bid
-            return redirect('/home')->back()->with('error', 'Bid amount must be higher than the current highest bid.');
+            // Get the Lelang instance
+            $lelang = Lelang::findOrFail($validatedData['id_lelang']);
+
+            // Check if the bid amount is greater than the current harga_akhir
+            if ($validatedData['bid_amount'] > $lelang->harga_akhir) {
+                // Update the harga_akhir with the new bid amount
+                $lelang->harga_akhir = $validatedData['bid_amount'];
+
+                // Update the id_user with the currently logged in user's id
+                $lelang->id_user = auth()->guard('masyarakat')->id();
+
+                // Save the changes
+                $lelang->save();
+
+                // Return a success response
+                return response()->json(['success' => true, 'message' => 'Bid placed successfully'], 200);
+            } else {
+                // Return a response indicating that the bid amount must be greater than the current bid
+                return response()->json(['success' => false, 'error' => 'Bid amount must be greater than the current bid'], 422);
+            }
+        } catch (\Exception $e) {
+            // Log the error message for debugging
+            Log::error('Error placing bid: ' . $e->getMessage());
+
+            // Return a server error response
+            return response()->json(['success' => false, 'error' => 'An error occurred while placing the bid. Please try again later.'], 500);
         }
     }
-
 }
-
-

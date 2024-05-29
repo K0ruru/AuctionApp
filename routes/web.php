@@ -25,6 +25,9 @@ Route::prefix('/officer')->group(function () {
 });
 
 Route::post('/addProduct', [BarangController::class, 'addProduct']);
+Route::delete('/barang/{id}', [BarangController::class, 'deleteProduct'])->name('deleteBarang');
+Route::post('/place-bid', [LelangController::class, 'placeBid'])->name('place.bid');
+
 
 
 // route group for admin
@@ -81,12 +84,13 @@ Route::prefix('/login-register')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 });
 
+
 // Route to handle logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout.masyarakat');
 
 // route for home website
 Route::middleware(['masyarakat.auth'])->get('/home', [LelangController::class, 'queryLelang'])->name('home');
-Route::post('/place-bid', [LelangController::class, 'placeBid'])->name('placeBid');
+
 
 // route login for masyakarat
 Route::get('/', function () {
