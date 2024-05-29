@@ -72,7 +72,7 @@
             </div>
             <div class="relative z-0 w-full mb-5 group">
                 <label for="range-harga" class="font-poppins text-sm font-medium">Harga Awal</label>
-                <input type="range" name="harga_awal" min="100000" max="5000000" value="55"
+                <input type="range" name="harga_awal" min="100000" max="5000000" value="55" step="10000"
                     class="w-4/5 m-2 h-2 bg-gray-400 rounded-lg border-gray-400 appearance-none cursor-pointer slider"
                     id="myRange">
                 <p class="text-sm font-medium mt-4">Value :<span id="demo" class="ml-2 font-bold"></span></p>
@@ -91,7 +91,7 @@
     </div>
 
 
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/accounting.js/0.4.1/accounting.min.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     <script>

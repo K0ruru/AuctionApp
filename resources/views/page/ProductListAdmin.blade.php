@@ -78,12 +78,13 @@
                         <td class="px-6 py-4">{{ $item->tgl_date }}</td>
                         <td class="px-6 py-4">Rp. {{ number_format($item->harga_awal, 0, ',', '.') }}</td>
                         <td class="px-6 py-4">{{ $item->deskripsi }}</td>
-                        <td class="px-6 py-4">{{ $item->status ?? 'tutup' }}</td>
+                        <td class="px-6 py-4">{{ $item->status ?? 'IN STOCK' }}</td>
                         <td class="px-6 py-4">
                             <button onclick="openForm('{{ $item->id_barang }}')"
                                 class="bg-blue-500 p-2 rounded-lg text-white mr-2">Open Auction</button>
-                            <form action="" method="post">
+                            <form action="{{ route('deleteBarang', $item->id_barang) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this product?');" style="display:inline;">
                                 @csrf
+                                @method('DELETE')
                                 <button type="submit" name="edit"
                                     class="bg-yellow-300 p-2 rounded-lg text-black">Edit</button>
                                 |
@@ -94,6 +95,7 @@
                     </tr>
                 @endforeach
             </tbody>
+
         </table>
     </div>
 
