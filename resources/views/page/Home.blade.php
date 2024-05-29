@@ -52,8 +52,9 @@
                             aria-current="page">Home</a>
                     </li>
                     <li>
-                        <a href="#"
-                            class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Account</a>
+                        <a href="#" id="inbox-popup"
+                            class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                            data-target="#inbox-modal">Inbox</a>
                     </li>
                     <li>
                         <form method="POST" action="{{ route('logout.masyarakat') }}" class="inline">
@@ -66,6 +67,25 @@
             </div>
         </div>
     </nav>
+
+    <!-- MODAL INBOX -->
+    <div id="inbox-modal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative w-full max-w-2xl max-h-full md:h-auto right-0 mt-11 mr-auto left-auto md:left-1/2 lg:left-1/2">
+        <div class="relative bg-gray-200 rounded-lg shadow dark:bg-gray-700">
+            <div class="flex justify-between items-center p-5 rounded-t border-b border-gray-200 dark:border-gray-600">
+                <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                    Yay! You Won the Auction!
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="inbox-modal">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
+                </button>
+            </div>
+            <div class="p-6 space-y-6">
+                <p class="text-gray-500 dark:text-gray-400">Congratulations! You have successfully won the auction for [nama barang].</p>
+            </div>
+        </div>
+    </div>
+</div>
 
     <!-- jumbotron -->
     <section class="h-screen flex justify-center" data-aos="fade-up" data-aos-delay="400">
@@ -243,6 +263,32 @@
                 }
             }
         });
+    </script>
+
+    <script>
+        // Add an event listener to the "Inbox" link in the navbar
+document.getElementById("inbox-popup").addEventListener("click", () => {
+  // Toggle the modal
+  const modal = document.getElementById("inbox-modal");
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+});
+
+// Add an event listener to the close button of the modal
+document.querySelector("[data-modal-toggle='inbox-modal']").addEventListener("click", () => {
+  // Toggle the modal
+  const modal = document.getElementById("inbox-modal");
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+});
+
+// Add an event listener to the "Close" button of the modal
+document.querySelector(".modal-footer .close-button").addEventListener("click", () => {
+  // Toggle the modal
+  const modal = document.getElementById("inbox-modal");
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+});
     </script>
 
 </body>
