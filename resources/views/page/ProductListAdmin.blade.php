@@ -12,12 +12,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Yellowtail&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&family=Yellowtail&display=swap"
         rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rampart+One&family=Yellowtail&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&family=Rampart+One&family=Yellowtail&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="{{ asset('css/global.css') }}">
@@ -80,9 +80,23 @@
                         <td class="px-6 py-4">{{ $item->deskripsi }}</td>
                         <td class="px-6 py-4">{{ $item->status ?? 'IN STOCK' }}</td>
                         <td class="px-6 py-4">
-                            <button onclick="openForm('{{ $item->id_barang }}')"
-                                class="bg-blue-500 p-2 rounded-lg text-white mr-2">Open Auction</button>
-                            <form action="{{ route('deleteBarang', $item->id_barang) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this product?');" style="display:inline;">
+                            @if ($item->status == 'buka')
+                                <form action="{{ route('closeAuction', $item->id_barang) }}" method="POST"
+                                    onsubmit="return confirm('Are you sure you want to close this auction?');"
+                                    style="display:inline;">
+                                    @csrf
+                                    <button type="submit" class="bg-red-500 p-2 rounded-lg text-white mr-2">Close
+                                        Auction</button>
+                                </form>
+                            @elseif ($item->status == 'tutup')
+                                <button disabled class="bg-gray-500 p-2 rounded-lg text-white mr-2">TERJUAL</button>
+                            @else
+                                <button onclick="openForm('{{ $item->id_barang }}')"
+                                    class="bg-blue-500 p-2 rounded-lg text-white mr-2">Open Auction</button>
+                            @endif
+                            <form action="{{ route('deleteBarang', $item->id_barang) }}" method="POST"
+                                onsubmit="return confirm('Are you sure you want to delete this product?');"
+                                style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" name="edit"
@@ -96,13 +110,15 @@
                 @endforeach
             </tbody>
 
+
         </table>
     </div>
 
-    <div id="auctionForm" class="fixed top-0 left-0 right-0 bottom-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden">
+    <div id="auctionForm"
+        class="fixed top-0 left-0 right-0 bottom-0 bg-gray-900 bg-opacity-50 justify-center items-center hidden">
         <div class="bg-white p-8 rounded-lg">
             <h2 class="text-2xl font-bold mb-4">Auction Product</h2>
-            <form action="{{ route('add.lelang')}}" method="post">
+            <form action="{{ route('add.lelang') }}" method="post">
                 @csrf
                 <div class="mb-4">
                     <label for="end_date" class="block text-sm font-medium text-gray-700">End Auction Date</label>
@@ -120,7 +136,6 @@
             document.getElementById('auctionForm').classList.remove('hidden');
         }
     </script>
-
 
 </body>
 

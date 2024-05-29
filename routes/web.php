@@ -27,6 +27,9 @@ Route::prefix('/officer')->group(function () {
 Route::post('/addProduct', [BarangController::class, 'addProduct']);
 Route::delete('/barang/{id}', [BarangController::class, 'deleteProduct'])->name('deleteBarang');
 Route::post('/place-bid', [LelangController::class, 'placeBid'])->name('place.bid');
+Route::post('/close-auction/{id_barang}', [LelangController::class, 'closeAuction'])->name('closeAuction');
+Route::get('/user/{userId}/closed-auctions', [LelangController::class, 'getUserClosedAuctions'])->name('user.closed_auctions');
+
 
 
 
