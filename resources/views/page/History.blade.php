@@ -90,7 +90,7 @@
                         <td class="px-6 py-4">{{ $lelang->barang->nama_barang }}</td>
                         <td class="px-6 py-4">{{ $lelang->user->nama_lengkap }}</td>
                         <td class="px-6 py-4">{{ $lelang->user->telp }}</td>
-                        <td class="px-6 py-4">{{ number_format($lelang->harga_akhir, 2, ',', '.') }}</td>
+                        <td class="px-6 py-4">Rp. {{ number_format($lelang->harga_akhir, 2, ',', '.') }}</td>
                         <td class="px-6 py-4">{{ \Carbon\Carbon::parse($lelang->tgl_lelang)->format('d M Y') }}</td>
                     </tr>
                 @endforeach

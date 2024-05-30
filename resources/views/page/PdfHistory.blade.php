@@ -18,18 +18,44 @@
         th,
         td {
             border: 1px solid #dddddd;
-            text-align: left;
+            text-align: center;
             padding: 8px;
         }
 
         th {
             background-color: #f2f2f2;
         }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .download-button {
+            background-color: #16a34a;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px auto;
+            display: block;
+            width: fit-content;
+        }
     </style>
 </head>
 
 <body>
-    <h2>Auction History</h2>
+    <div class="header">
+        <h2>Auction History</h2>
+    </div>
+
     <table>
         <thead>
             <tr>
@@ -50,7 +76,7 @@
                     <td>{{ $lelang->barang->nama_barang }}</td>
                     <td>{{ $lelang->user->nama_lengkap }}</td>
                     <td>{{ $lelang->user->telp }}</td>
-                    <td>{{ number_format($lelang->harga_akhir, 2, ',', '.') }}</td>
+                    <td>Rp. {{ number_format($lelang->harga_akhir, 2, ',', '.') }}</td>
                     <td>{{ \Carbon\Carbon::parse($lelang->tgl_lelang)->format('d M Y') }}</td>
                 </tr>
             @endforeach
