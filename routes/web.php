@@ -28,7 +28,7 @@ Route::post('/addProduct', [BarangController::class, 'addProduct']);
 Route::delete('/barang/{id}', [BarangController::class, 'deleteProduct'])->name('deleteBarang');
 Route::post('/place-bid', [LelangController::class, 'placeBid'])->name('place.bid');
 Route::post('/close-auction/{id_barang}', [LelangController::class, 'closeAuction'])->name('closeAuction');
-Route::get('/user/{userId}/closed-auctions', [LelangController::class, 'getUserClosedAuctions'])->name('user.closed_auctions');
+Route::get('/auction-history/download-pdf', [LelangController::class, 'downloadAuctionHistoryPDF'])->name('download.auction.history.pdf');
 
 
 
@@ -50,9 +50,7 @@ Route::middleware(['admin.auth'])->prefix('/admin')->group(function () {
         return view('CRUD-PAGE.addPetugas');
     });
 
-    Route::get('/admin-report', function () {
-        return view('page.History');
-    });
+    Route::get('/admin-report', [LelangController::class, 'getAuctionHistory'])->name('history');
 
     Route::post('/logout', [PetugasController::class, 'logout'])->name('logout.petugas');
 });

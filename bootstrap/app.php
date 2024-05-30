@@ -8,7 +8,9 @@ use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\AdminAuth;
 use App\Http\Middleware\MasyarakatAuth;
 
-return Application::configure(basePath: dirname(__DIR__))
+// Create the application instance
+$app = Application::configure(basePath: dirname(__DIR__))
+
     ->withRouting(
         web: __DIR__ . '/../routes/web.php',
         commands: __DIR__ . '/../routes/console.php',
@@ -25,4 +27,14 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
-    })->create();
+    })
+    ->create();
+
+$app->singleton('config', function ($app) {
+    return new Illuminate\Config\Repository();
+});
+
+$app->register(\Barryvdh\DomPDF\ServiceProvider::class);
+
+// Return the application instance
+return $app;
