@@ -46,11 +46,11 @@ Route::middleware(['admin.auth'])->prefix('/admin')->group(function () {
     Route::get('/admin-product-list', [BarangController::class, 'queryProduct'])->name('query.product');
     Route::post('/addLelang', [LelangController::class, 'addLelang'])->name('add.lelang');
 
-    Route::get('/admin-data-officer', function () {
-        return view('CRUD-PAGE.addPetugas');
-    });
+    Route::get('/admin-data-officer', [PetugasController::class, 'index'])->name('data');
 
     Route::get('/admin-report', [LelangController::class, 'getAuctionHistory'])->name('history');
+    Route::delete('/admin/admin-data-officer/{id}', [PetugasController::class, 'delete'])->name('delete.petugas');
+    Route::put('/admin/admin-data-officer/{id}', [PetugasController::class, 'update'])->name('update.petugas');
 
     Route::post('/logout', [PetugasController::class, 'logout'])->name('logout.petugas');
 });
