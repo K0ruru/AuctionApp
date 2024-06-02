@@ -60,21 +60,9 @@ class PetugasController extends Controller
 
             $user = Auth::guard('petugas')->user();
 
-            // Check if the user has the required id_level
-            if ($user->id_level == 1) {
-                Log::info('User logged in successfully', ['user' => $user]);
-                return redirect()->intended('admin/admin-dashboard')->with('success', 'Login successful');
-            } else {
-                // Log out the user and redirect back with an error message
-                Log::warning('Unauthorized access attempt', ['user' => $user]);
-                Auth::guard('petugas')->logout();
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
+            Log::info('User logged in successfully', ['user' => $user]);
+            return redirect()->intended('admin/admin-dashboard')->with('success', 'Login successful');
 
-                return back()->withErrors([
-                    'username' => 'Unauthorized access. You do not have the required permissions.',
-                ]);
-            }
         }
 
         Log::error('Authentication failed', ['credentials' => $credentials]);
