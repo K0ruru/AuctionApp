@@ -27,6 +27,9 @@ Route::prefix('/officer')->group(function () {
 Route::post('/addProduct', [BarangController::class, 'addProduct']);
 Route::delete('/barang/{id}', [BarangController::class, 'deleteProduct'])->name('deleteBarang');
 Route::post('/place-bid', [LelangController::class, 'placeBid'])->name('place.bid');
+Route::post('/close-auction/{id_barang}', [LelangController::class, 'closeAuction'])->name('closeAuction');
+Route::get('/auction-history/download-pdf', [LelangController::class, 'downloadAuctionHistoryPDF'])->name('download.auction.history.pdf');
+
 
 
 
@@ -43,13 +46,11 @@ Route::middleware(['admin.auth'])->prefix('/admin')->group(function () {
     Route::get('/admin-product-list', [BarangController::class, 'queryProduct'])->name('query.product');
     Route::post('/addLelang', [LelangController::class, 'addLelang'])->name('add.lelang');
 
-    Route::get('/admin-data-officer', function () {
-        return view('CRUD-PAGE.addPetugas');
-    });
+    Route::get('/admin-data-officer', [PetugasController::class, 'index'])->name('data');
 
-    Route::get('/admin-report', function () {
-        return view('page.History');
-    });
+    Route::get('/admin-report', [LelangController::class, 'getAuctionHistory'])->name('history');
+    Route::delete('/admin/admin-data-officer/{id}', [PetugasController::class, 'delete'])->name('delete.petugas');
+    Route::put('/admin/admin-data-officer/{id}', [PetugasController::class, 'update'])->name('update.petugas');
 
     Route::post('/logout', [PetugasController::class, 'logout'])->name('logout.petugas');
 });

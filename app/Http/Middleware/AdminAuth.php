@@ -21,9 +21,7 @@ class AdminAuth
         }
 
         $user = Auth::guard('petugas')->user();
-        if ($user->id_level !== 1) { // Updated to check id_level
-            return redirect('/')->withErrors(['message' => 'Unauthorized access.']);
-        }
+
 
         return $next($request);
     }

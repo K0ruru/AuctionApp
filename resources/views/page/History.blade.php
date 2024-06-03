@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,10 +23,11 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+
 <body>
 
-        <!-- NAVBAR -->
-        <nav class="bg-white border-gray-200 dark:bg-gray-900">
+    <!-- NAVBAR -->
+    <nav class="bg-white border-gray-200 dark:bg-gray-900">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
             <img src="{{ asset('images/Screenshot_20240507_205844-removebg-preview (1).png') }}" class="h-8"
                 alt="Logo" />
@@ -42,7 +44,6 @@
             </button>
             <div class="hidden w-full md:block md:w-auto" id="navbar-default">
                 <ul
-                
                     class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
                     <li>
                         <form method="POST" action="{{ route('logout.petugas') }}" class="inline">
@@ -56,35 +57,47 @@
         </div>
     </nav>
 
-    
+
     <!-- HISTORY LELANG -->
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-8/12 mx-auto mt-32">
         <div class="flex bg-blue-900 w-auto mx-auto justify-between p-2">
             <h1 class="font-poppins font-bold text-white text-2xl lg:text-3xl">Auction History</h1>
-            <button type="submit" name="donwload_pdf" class=" bg-green-700 p-2 rounded-lg text-white hover:bg-blue-500 transition-all">Download PDF</button>
+            <button type="button" onclick="window.location='{{ route('download.auction.history.pdf') }}'"
+                class="bg-green-700 p-2 rounded-lg text-white hover:bg-blue-500 transition-all">Download PDF</button>
+
         </div>
-        
+
         <table class="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" class="px-6 py-3">No</th>
                     <th scope="col" class="px-6 py-3">ID Lelang</th>
-                    <th scope="col" class="px-6 py-3">ID Barang</th>
-                    <th scope="col" class="px-6 py-3">ID User</th>
-                    <th scope="col" class="px-6 py-3">Penawaran Harga</th>
+                    <th scope="col" class="px-6 py-3">Barang</th>
+                    <th scope="col" class="px-6 py-3">Pemenang</th>
+                    <th scope="col" class="px-6 py-3">No Telp</th>
+                    <th scope="col" class="px-6 py-3">Harga Jual</th>
+                    <th scope="col" class="px-6 py-3">Berakhir</th>
                 </tr>
             </thead>
             <tbody>
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        1</th>
-                    <td class="px-6 py-4">20</td>
-                    <td class="px-6 py-4">10</td>
-                    <td class="px-6 py-4">5</td>
-                    <td class="px-6 py-4">Rp. 200.000</td>
-                </tr>
+                @foreach ($lelangs as $index => $lelang)
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th scope="row"
+                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {{ $index + 1 }}
+                        </th>
+                        <td class="px-6 py-4">{{ $lelang->id_lelang }}</td>
+                        <td class="px-6 py-4">{{ $lelang->barang->nama_barang }}</td>
+                        <td class="px-6 py-4">{{ $lelang->user->nama_lengkap }}</td>
+                        <td class="px-6 py-4">{{ $lelang->user->telp }}</td>
+                        <td class="px-6 py-4">Rp. {{ number_format($lelang->harga_akhir, 2, ',', '.') }}</td>
+                        <td class="px-6 py-4">{{ \Carbon\Carbon::parse($lelang->tgl_lelang)->format('d M Y') }}</td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
+
 </body>
+
 </html>

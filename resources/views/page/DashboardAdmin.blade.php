@@ -59,7 +59,7 @@
     <!-- card-section -->
     <div class="flex items-center justify-center flex-col sm:h-auto lg:h-screen lg:overflow-hidden md:h-auto"
         style="padding:20px;">
-        <h1 class="text-center font-poppins text-3xl lg:text-7xl md:text-5xl font-bold mb-7">Utility Admin</h1>
+        <h1 class="text-center font-poppins text-3xl lg:text-7xl md:text-5xl font-bold mb-7">Utility</h1>
         <div class=" h-auto flex mx-auto flex-wrap justify-center items-center sm:h-auto" style="gap:20px;">
             <div class="bg-white border w-80 border-gray-200 rounded-3xl shadow-3xl p-6 dark:bg-gray-800 dark:border-gray-700"
                 style="border-radius: 20px;">
@@ -72,38 +72,43 @@
                 </div>
             </div>
             <div class=" h-auto flex mx-auto flex-wrap justify-center items-center sm:h-auto" style="gap:20px;">
-            <div class="bg-white border w-80 border-gray-200 rounded-3xl shadow-3xl p-6 dark:bg-gray-800 dark:border-gray-700"
-                style="border-radius: 20px;">
-                <img class="rounded-lg w-52 p-3 mt-4 mx-auto" src="{{ asset('images/box.gif') }}" alt="" />
-                <div class="p-5 flex justify-center rounded-md">
-                    <button
-                        class="inline-flex mx-auto items-center px-3 py-2 text-sm font-medium text-center text-white bg-black rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        <a href="/admin/admin-product-list">Product List</a>
-                    </button>
+                <div class="bg-white border w-80 border-gray-200 rounded-3xl shadow-3xl p-6 dark:bg-gray-800 dark:border-gray-700"
+                    style="border-radius: 20px;">
+                    <img class="rounded-lg w-52 p-3 mt-4 mx-auto" src="{{ asset('images/box.gif') }}" alt="" />
+                    <div class="p-5 flex justify-center rounded-md">
+                        <button
+                            class="inline-flex mx-auto items-center px-3 py-2 text-sm font-medium text-center text-white bg-black rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            <a href="/admin/admin-product-list">Product List</a>
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div class="bg-white border w-80 border-gray-200 rounded-3xl shadow-3xl p-6 dark:bg-gray-800 dark:border-gray-700"
-                style="border-radius: 20px;">
-                <img class="rounded-lg w-52 p-3 mt-4 mx-auto" src="{{ asset('images/checklist.gif') }}"
-                    alt="" />
-                <div class="p-5 flex justify-center rounded-md">
-                    <a href="/admin/admin-report"
-                        class="inline-flex mx-auto items-center px-3 py-2 text-sm font-medium text-center text-white bg-black rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        Generate Report
-                    </a>
+                <div class="bg-white border w-80 border-gray-200 rounded-3xl shadow-3xl p-6 dark:bg-gray-800 dark:border-gray-700"
+                    style="border-radius: 20px;">
+                    <img class="rounded-lg w-52 p-3 mt-4 mx-auto" src="{{ asset('images/checklist.gif') }}"
+                        alt="" />
+                    <div class="p-5 flex justify-center rounded-md">
+                        <a href="/admin/admin-report"
+                            class="inline-flex mx-auto items-center px-3 py-2 text-sm font-medium text-center text-white bg-black rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            Generate Report
+                        </a>
+                    </div>
                 </div>
-            </div>
-            <div class="bg-white border w-80 border-gray-200 rounded-3xl shadow-3xl p-6 dark:bg-gray-800 dark:border-gray-700"
-                style="border-radius: 20px;">
-                <img class="rounded-lg w-52 p-3 mt-4 mx-auto" src="{{ asset('images/skills.gif') }}" alt="" />
-                <div class="p-5 flex justify-center rounded-md">
-                    <a href="/admin/admin-data-officer"
-                        class="inline-flex mx-auto items-center px-3 py-2 text-sm font-medium text-center text-white bg-black rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        Add Workers
-                    </a>
-                </div>
+                @if (Auth::guard('petugas')->user()->id_level != 2)
+                    <div class="bg-white border w-80 border-gray-200 rounded-3xl shadow-3xl p-6 dark:bg-gray-800 dark:border-gray-700"
+                        style="border-radius: 20px;">
+                        <img class="rounded-lg w-52 p-3 mt-4 mx-auto" src="{{ asset('images/skills.gif') }}"
+                            alt="" />
+                        <div class="p-5 flex justify-center rounded-md">
+                            <a href="/admin/admin-data-officer"
+                                class="inline-flex mx-auto items-center px-3 py-2 text-sm font-medium text-center text-white bg-black rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                Add Workers
+                            </a>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
+    </div>
     </div>
 
     <!-- popup untuk tambah produk -->
@@ -118,7 +123,8 @@
                     required>
 
                 <label for="product-type">Product Type</label>
-                <input type="text" id="product-type" class="block w-full p-2 pl-10 text-sm text-gray-700" required>
+                <input type="text" id="product-type" class="block w-full p-2 pl-10 text-sm text-gray-700"
+                    required>
 
                 <label for="description">Description</label>
                 <textarea id="description" class="block w-full p-2 pl-10 text-sm rounded-lg text-gray-700" required></textarea>
@@ -126,12 +132,14 @@
                 <label for="starting-price">Starting Price</label>
                 <input type="range" min="100000" max="50000000" value="55"
                     class="w-4/5 m-2 h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer slider" id="myRange">
-                <p class="text-xl font-medium mt-4">Value :<span id="demo" class="ml-2 font-bold"></span></p>
+                <p class="text-xl font-medium mt-4">Value :<span id="demo" class="ml-2 font-bold"></span>
+                </p>
 
                 <label for="starting-price" class="mt-10">Minimum bid</label>
                 <input type="range" min="10000" max="50000000" value="55"
                     class="w-4/5 m-2 h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer slider" id="myRange">
-                <p class="text-xl font-medium mt-4">Value :<span id="demo" class="ml-2 font-bold"></span></p>
+                <p class="text-xl font-medium mt-4">Value :<span id="demo" class="ml-2 font-bold"></span>
+                </p>
 
                 <label for="auction-duration" class="mt-10">Auction Duration</label>
                 <input type="number" id="auction-duration"

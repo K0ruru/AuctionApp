@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use App\Models\Lelang;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Masyarakat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -39,10 +41,46 @@ class LelangController extends Controller
         return redirect()->back()->with('success', 'Auction opened successfully.');
     }
 
+    public function getUserClosedAuctions()
+    {
+        try {
+            // Get the authenticated user ID
+            $userId = auth()->guard('masyarakat')->id();
+
+            // Query all Lelang records where id_user is the specified user ID and status is 'tutup'
+            $lelangs = Lelang::where('id_user', $userId)->where('status', 'tutup')->get();
+
+            // Extract all id_barang values from the lelang records
+            $idBarangValues = $lelangs->pluck('id_barang')->toArray();
+
+            // Retrieve the corresponding records from the barang table using the extracted id_barang values
+            $barangs = Barang::whereIn('id_barang', $idBarangValues)->get();
+
+            // Create an associative array to map id_barang to barang details
+            $barangMap = $barangs->keyBy('id_barang');
+
+            // Merge the lelang data with the corresponding barang data
+            $lelangs = $lelangs->map(function ($lelang) use ($barangMap) {
+                $lelang->barang = $barangMap->get($lelang->id_barang);
+                return $lelang;
+            });
+
+            // Return the merged data
+            return $lelangs;
+        } catch (\Exception $e) {
+            // Log the error message for debugging
+            Log::error('Error retrieving closed auctions for user: ' . $e->getMessage());
+
+            // Return an empty collection in case of an error
+            return collect();
+        }
+    }
+
+
     public function queryLelang()
     {
-        // Retrieve all records from the lelang table
-        $lelangs = Lelang::all();
+        // Retrieve all records from the lelang table where status is 'buka'
+        $lelangs = Lelang::where('status', 'buka')->get();
 
         // Extract all id_barang values from the lelang records
         $idBarangValues = $lelangs->pluck('id_barang')->toArray();
@@ -59,9 +97,14 @@ class LelangController extends Controller
             return $lelang;
         });
 
-        // Pass the merged data to the 'page.Home' view
-        return view('page.Home', ['lelangs' => $lelangs]);
+        // Get user's closed auctions
+        $closedAuctions = $this->getUserClosedAuctions();
+
+        // Pass the merged data and closed auctions to the 'page.Home' view
+        return view('page.Home', ['lelangs' => $lelangs, 'notifications' => $closedAuctions]);
     }
+
+
 
     public function placeBid(Request $request)
     {
@@ -98,6 +141,115 @@ class LelangController extends Controller
 
             // Return a server error response
             return response()->json(['success' => false, 'error' => 'An error occurred while placing the bid. Please try again later.'], 500);
+        }
+    }
+
+    public function closeAuction($id_barang)
+    {
+        try {
+            // Find the lelang record by id_barang
+            $lelang = Lelang::where('id_barang', $id_barang)->firstOrFail();
+
+            // Update the status to 'closed'
+            $lelang->status = 'tutup';
+
+            // Save the changes
+            $lelang->save();
+
+            // Optionally, you can also update the status of the related Barang record
+            $barang = Barang::where('id_barang', $id_barang)->first();
+            if ($barang) {
+                $barang->status = 'tutup';
+                $barang->save();
+            }
+
+            // Redirect back with a success message
+            return redirect()->back()->with('success', 'Auction closed successfully.');
+        } catch (\Exception $e) {
+            // Log the error message for debugging
+            Log::error('Error closing auction: ' . $e->getMessage());
+
+            // Return a server error response
+            return redirect()->back()->with('error', 'An error occurred while closing the auction. Please try again later.');
+        }
+    }
+
+    public function getAuctionHistory()
+    {
+        try {
+            // Query all records from the lelang table where status is 'tutup'
+            $lelangs = Lelang::where('status', 'tutup')->get();
+
+            // Extract all id_barang and id_user values from the lelang records
+            $idBarangValues = $lelangs->pluck('id_barang')->toArray();
+            $idUserValues = $lelangs->pluck('id_user')->toArray();
+
+            // Retrieve the corresponding records from the barang table using the extracted id_barang values
+            $barangs = Barang::whereIn('id_barang', $idBarangValues)->get();
+
+            // Retrieve the corresponding records from the masyarakat table using the extracted id_user values
+            $users = Masyarakat::whereIn('id_user', $idUserValues)->get();
+
+            // Create associative arrays to map id_barang and id_user to their respective details
+            $barangMap = $barangs->keyBy('id_barang');
+            $userMap = $users->keyBy('id_user');
+
+            // Merge the lelang data with the corresponding barang and user data
+            $lelangs = $lelangs->map(function ($lelang) use ($barangMap, $userMap) {
+                $lelang->barang = $barangMap->get($lelang->id_barang);
+                $lelang->user = $userMap->get($lelang->id_user);
+                return $lelang;
+            });
+
+            // Return the merged data
+            return view('page.History', ['lelangs' => $lelangs]);
+        } catch (\Exception $e) {
+            // Log the error message for debugging
+            Log::error('Error retrieving auction history: ' . $e->getMessage());
+
+            // Return an empty collection in case of an error
+            return view('page.History', ['lelangs' => collect()]);
+        }
+    }
+
+    public function downloadAuctionHistoryPDF()
+    {
+        try {
+            // Query all records from the lelang table where status is 'tutup'
+            $lelangs = Lelang::where('status', 'tutup')->get();
+
+            // Extract all id_barang and id_user values from the lelang records
+            $idBarangValues = $lelangs->pluck('id_barang')->toArray();
+            $idUserValues = $lelangs->pluck('id_user')->toArray();
+
+            // Retrieve the corresponding records from the barang table using the extracted id_barang values
+            $barangs = Barang::whereIn('id_barang', $idBarangValues)->get();
+
+            // Retrieve the corresponding records from the masyarakat table using the extracted id_user values
+            $users = Masyarakat::whereIn('id_user', $idUserValues)->get();
+
+            // Create associative arrays to map id_barang and id_user to their respective details
+            $barangMap = $barangs->keyBy('id_barang');
+            $userMap = $users->keyBy('id_user');
+
+            // Merge the lelang data with the corresponding barang and user data
+            $lelangs = $lelangs->map(function ($lelang) use ($barangMap, $userMap) {
+                $lelang->barang = $barangMap->get($lelang->id_barang);
+                $lelang->user = $userMap->get($lelang->id_user);
+                return $lelang;
+            });
+
+            // Generate the PDF
+            $pdf = Pdf::loadView('page.PdfHistory', ['lelangs' => $lelangs]);
+
+            // Download the generated PDF
+            return $pdf->download('auction_history.pdf');
+        } catch (\Exception $e) {
+            // Log the error message for debugging
+            Log::error('Error generating auction history PDF: ' . $e->getMessage());
+
+            // Return an error response
+            return redirect()->back()->with('error', 'An error occurred while generating the PDF. Please try again later.');
         }
     }
 }

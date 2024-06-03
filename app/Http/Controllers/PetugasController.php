@@ -17,6 +17,7 @@ class PetugasController extends Controller
             'nama_petugas' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:petugas,username',
             'password' => 'required|string|min:8|confirmed',
+            'id_level' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -27,10 +28,10 @@ class PetugasController extends Controller
             'nama_petugas' => $request->nama_petugas,
             'username' => $request->username,
             'password' => Hash::make($request->password),
-            'id_level' => 1, // Set id_level to 1
+            'id_level' => $request->id_level
         ]);
 
-        return redirect('/')->with('success', 'Registration successful. Please log in.');
+        return redirect('/admin/admin-data-officer')->with('success', 'Registration successful. Please log in.');
     }
 
     public function showLoginForm()
@@ -59,21 +60,9 @@ class PetugasController extends Controller
 
             $user = Auth::guard('petugas')->user();
 
-            // Check if the user has the required id_level
-            if ($user->id_level == 1) {
-                Log::info('User logged in successfully', ['user' => $user]);
-                return redirect()->intended('admin/admin-dashboard')->with('success', 'Login successful');
-            } else {
-                // Log out the user and redirect back with an error message
-                Log::warning('Unauthorized access attempt', ['user' => $user]);
-                Auth::guard('petugas')->logout();
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
+            Log::info('User logged in successfully', ['user' => $user]);
+            return redirect()->intended('admin/admin-dashboard')->with('success', 'Login successful');
 
-                return back()->withErrors([
-                    'username' => 'Unauthorized access. You do not have the required permissions.',
-                ]);
-            }
         }
 
         Log::error('Authentication failed', ['credentials' => $credentials]);
@@ -94,6 +83,48 @@ class PetugasController extends Controller
         // Redirect the user to the login page with a success message
         return redirect()->route('login.view.petugas')->with('success', 'You have been logged out.');
 
+    }
+
+    public function index()
+    {
+        $petugas = Petugas::all();
+        return view('CRUD-PAGE.addPetugas', ['petugas' => $petugas]);
+    }
+
+    public function delete($id)
+    {
+        $petugas = Petugas::findOrFail($id);
+
+        try {
+            $petugas->delete();
+            return redirect()->back()->with('success', 'Petugas deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to delete Petugas. Please try again.');
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        $petugas = Petugas::findOrFail($id);
+
+        $request->validate([
+            'nama_petugas' => 'required|string|max:255',
+            'username' => 'required|string|max:255',
+            'password' => 'required|string|min:8|confirmed',
+            'id_level' => 'required|integer',
+        ]);
+
+        $petugas->nama_petugas = $request->input('nama_petugas');
+        $petugas->username = $request->input('username');
+        $petugas->password = Hash::make($request->input('password'));
+        $petugas->id_level = $request->input('id_level');
+
+        try {
+            $petugas->save();
+            return redirect()->back()->with('success', 'Petugas updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to update Petugas. Please try again.');
+        }
     }
 
 
