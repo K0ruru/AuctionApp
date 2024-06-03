@@ -28,7 +28,7 @@
     <p class="absolute top-3 right-2 font-poppins font-normal bg-black p-3 text-white rounded-md"><a
             href="/login-register/login">Login as Admin</a></p>
     <div class="w-auto flex flex-col justify-center items-center bg-gray-100 p-12 rounded-xl shadow-3xl"
-        style="height:55vh;">
+        style="height:auto;">
         <img src="{{ asset('images/Screenshot_20240507_205844-removebg-preview (1).png') }}" class="w-60 mb-5" />
         <p class="mb-10 font font-yellowtail text-3xl">Welcome back!</p>
         @if ($errors->any())
@@ -40,7 +40,7 @@
                 </ul>
             </div>
         @endif
-        <form class="max-w-sm mx-auto" action="{{ url('/login-register/login-masyarakat') }}" method="POST">
+        <form class="max-w-sm mx-auto h-auto" action="{{ url('/login-register/login-masyarakat') }}" method="POST">
             @csrf
             <div class="mb-5">
                 <input type="text" name="username" id="username"

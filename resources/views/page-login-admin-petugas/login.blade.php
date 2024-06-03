@@ -29,8 +29,8 @@
 <body>
     <p class="absolute top-3 right-2 font-poppins font-normal bg-black p-3 text-white rounded-md"><a
             href="/">Login as User</a></p>
-    <div class="w flex flex-col justify-center items-center bg-gray-100 p-12 rounded-xl shadow-3xl"
-        style="height:60vh;">
+    <div class="w flex flex-col justify-center items-center h-auto bg-gray-100 p-12 rounded-xl shadow-3xl"
+        style="height:auto;">
         <img src="{{ asset('images/Screenshot_20240507_205844-removebg-preview (1).png') }}" class="w-60 mb-5" />
         <p class="mb-10 font font-yellowtail text-3xl">Welcome back!</p>
 
@@ -44,7 +44,7 @@
             </div>
         @endif
 
-        <form class="max-w-sm mx-auto" action="{{ route('login') }}" method="POST">
+        <form class="max-w-sm mx-auto h-auto" action="{{ route('login') }}" method="POST">
             @csrf
             <div class="mb-5">
                 <input type="text" name="username" id="username"
@@ -61,8 +61,6 @@
                 class="flex justify-center text-white bg-zinc-950 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm sm:w-auto px-5 p-2 text-center font-poppins dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mx-auto"
                 style="width: 150px; margin-top: 20px;">Login</button>
         </form>
-        <p class="mt-24 font-poppins">Don't have an account? <a href="/login-register/sign-up-officer"
-                class="font-poppins text-blue-600">Sign up here</a></p>
     </div>
 </body>
 

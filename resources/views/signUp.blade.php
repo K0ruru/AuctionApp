@@ -25,10 +25,10 @@
 </head>
 
 <body>
-    <div class="w-auto flex flex-col justify-center items-center bg-gray-100 p-12 rounded-xl shadow-3xl"
-        style="height:60vh;">
-        <img src="{{ asset('images/Screenshot_20240507_205844-removebg-preview (1).png') }}" class="w-60 mb-5" />
-        <p class="mb-10 font font-yellowtail text-3xl">let’s get started!</p>
+    <div class="w-auto flex flex-col justify-center items-center h-auto bg-gray-100 p-12 rounded-xl shadow-3xl"
+        style="height:auto;">
+        <img src="{{ asset('images/Screenshot_20240507_205844-removebg-preview (1).png') }}" class="w-60 mt-4 mb-3" />
+        <p class="mb-5 font font-yellowtail text-3xl">let’s get started!</p>
         @if ($errors->any())
             <div class="mb-4">
                 <ul class="list-disc list-inside text-red-600">
@@ -69,7 +69,7 @@
                 class="flex justify-center text-white bg-zinc-950 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm sm:w-auto px-5 p-2 text-center font-poppins dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mx-auto"
                 style="width: 150px; margin-top: 20px;">Sign-Up</button>
         </form>
-        <p class="mt-24 font-poppins">already have an account? <a href="/login-register/login"
+        <p class="mt-20 font-poppins">already have an account? <a href="/login-register/login"
                 class="font-poppins text-blue-600">login here</a></p>
     </div>
 
